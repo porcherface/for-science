@@ -1,0 +1,539 @@
+\chapter{Boundaries of the Cayley tree}
+
+Consider a Cayley tree of coordination number $K$. The number of site on a given shell $s$ can be evaluated as follows:
+
+\begin{eqnarray}
+n_{s} &=& Kn_{s-1} \nonumber\\
+      &=& K^2n_{s-2} \nonumber\\
+		&=& ... \nonumber\\
+		&=& K^{s-1}n_1 \nonumber\\
+		&=& K^{s-1}(K+1)n_0 \nonumber\\
+\end{eqnarray}
+
+where $n_0=1$ and represents the seed of the lattice. The fraction of sites lying on the boundary is evaluated using
+
+\begin{eqnarray}
+\lim_{s\rightarrow\infty} \frac{n_{s}}{\sum_{j=0}^{s-1} n_{j}}
+\end{eqnarray}
+
+The sum on the denominator of the equation is easy to determine. If we regroup the $(K+1)$ common factor we may evaluate the sum as a truncated geometric series. It is well know that a sum of the type $\sum_{j=0}^n x^j$ can be estimated as $ {1-x^{n+1} \over 1 - x} $. Thus it is possible to write (remembering that each $n_j$ contains a term proportional to $K^j-1$ and the last term has $j=s-1$, and neglecting the first term of the series when extracting the common term $K+1$)
+
+\begin{eqnarray}
+\lim_{s\rightarrow\infty} \frac{n_{s}}{\sum_{j=0}^{s-1} n_{j}} &=&  {(K+1)K^{s-1}\over
+{(K+1)(1-K^{s-1}) \over (K+1)}} \nonumber \\
+                                                               &=&  {K^{s-1}(1-K)  \over 1-K^{s-1}} \nonumber \\
+                                                               &=&   K \nonumber
+\end{eqnarray}
+
+Thus the for each site in the internal region of the Cayley tree we may find $K$ sites on the frontier, in the thermodynamic limit.
+
+%\chapter{Evaluation of the x-derivative of the free energy}
+
+%Before starting we remind that the total free energy of the BLSG may be written as $F = {K+1 \over 2}F_l - K F_s$, where
+%$F_l$ and $F_s$ are respectively given by
+%
+%\begin{eqnarray}
+%-\beta F_s &=& E_J\langle \ln \sum_{\alpha} W^\alpha \exp[-\beta \Delta F_s(J_1\ldots,h_1\ldots,h_{K+1})] \rangle \nonumber \\
+%-\beta F_l &=& E_JE_{L}\langle \ln \sum_{\alpha} W^\alpha \exp[-\beta \Delta F_l(J,J_1\ldots,h_1\ldots,L_1\ldots,g_1\ldots,g_{K},)] \rangle \nonumber
+%\end{eqnarray}%
+
+%The bond contribution is evaluated using the free energy shift obtained when adding a new cavity
+%bond to the system (the variable $J$ without any index is the cavity bond).
+%If we perform the x-derivative of $F(x)$ we obtain
+%
+
+
+\chapter{Weighted sums with exponential density}
+
+Here is a list of two theorems useful to evaluate weighted averages in the RSB scheme.
+
+\begin{theorem}
+
+Consider a set of $M$ iid random free energies, distributed with the exponential density $\rho(f) \propto \exp(\beta x (f-f_R))$. Then, neglecting terms which go to
+zero when $M$ goes to infinity, the following relation holds:
+
+\begin{equation}
+\langle \ln \frac{ \sum_k a_k \exp(-\beta f_k) }{\sum_k \exp(-\beta f_k)}\rangle = \frac{1}{x} \ln (\frac{1}{M} \sum_k a_{k}^x)
+\label{app1}
+\end{equation}
+\end{theorem}
+
+\begin{corollary}
+With the same conditions of the previous theorem, the following relation is valid.
+
+\begin{equation}
+\langle\frac{ \sum_k a_k b_k\exp(-\beta f_k) }{\sum_k a_k\exp(-\beta f_k)}\rangle = \frac{ \sum_k a_{k}^x b_k}{\sum_k a_{k}^x}
+\label{app2}
+\end{equation}
+\end{corollary}
+
+As it is easy to see, once \ref{app1} is demonstrated, \ref{app2} follows in a straightforward way.
+
+
+\chapter{Algorithm core}
+\section{Main part}
+The main file of the two step RSB algorithm is reported. The main file performs a simulation for each pair of the values in the x_rsb_sample and y_rsb_sample arrays (called $x_s$ and $x_C$ in the discussion).
+
+In the first phase of the study the goal was to find the couple that maximizes $F$, so the range of the couple $(x_s,x_C)$ was in this way easy to configure.
+When the correct couple has been found, the same procedure shall be used to do estimate the error
+in the evaluation of each observable.
+
+\begin{verbatim}
+
+#include "defines.h"
+
+int main(){
+
+	//be polite	
+	cout << "hello!";
+
+
+	//random seed for randStream
+	srand(0);
+
+	//remove previous data
+	remove(FILE_NAME_XY);
+
+	//initialize variables
+	mySystem Sys;
+
+	//init del sistema
+	init();
+
+
+	//////////////////////////////////////////////////////////////////////////////////////////
+	//////////////////////////////////////////////////////////////////////////////////////////
+	Sys.time = 0;
+	while (Sys.time < MAX_TIME)
+	{
+
+		//choose indexes
+		Sys.currSiteIndex = Sys.time%Nh;
+		Sys.currSite = &Sys.Site[Sys.currSiteIndex];
+
+		Sys.choose_sites();
+
+		//merge
+		Sys.merge_fields();
+
+		//reweigh
+		Sys.currSite->reweigh();
+
+		//evaluate free energy
+		Sys.currSite->evaluate();
+
+		if (Sys.time > BIAS && Sys.time % Nh == 0){
+
+			//observables
+			Sys.evaluate_observables();
+			Sys.write_file();
+		}
+
+		if (Sys.time == MAX_TIME / 2){
+			cout << "Halfway done ";
+		}
+		if (Sys.time % (MAX_TIME / 10) == 0){
+			cout << ".";
+		}
+
+		Sys.time++;
+
+	}//endsim
+
+	return 0;
+}
+
+
+
+\end{verbatim}
+
+\section{Merge procedure and free energy shift}
+
+In this appendix I will provide the routine used when merging $K$ branches into a site. In this code I will also evaluate the free energy shift, at state level.
+
+\begin{verbatim}
+void mySystem::merge_fields(){
+
+	// evaluate for each cluster & state the
+	// merged field and the free energy
+	double u, usite, ulink;
+	double beta = 1. / T;
+	double shift,shiftsite,shiftlink1,shiftlink2;
+
+	double h0,h0site,h0link,g0link;
+
+	for (int cit = 0; cit < Nc; cit++){
+		for (int sit = 0; sit < Nc; sit++)
+		{
+			h0 = 0;
+			h0site = 0;
+			h0link=0;
+			g0link = 0;
+			shift = 0;
+			shiftsite = 0;
+			shiftlink1 = 0;
+			shiftlink2 = 0;
+			for (int k = 0; k < 2 * K; k++){
+				if (k < K){
+					u = T*atanh(tanh(beta*Jiter[k])*
+						tanh(beta*Site[iterNeighs[k]].Cluster[cit].State[sit]));
+					h0 += u;
+					shift += log(cosh(beta*Jiter[k]) / cosh(beta*u));
+				}
+				if (k < K + 1){
+					usite = T*atanh(tanh(beta*Jsite[k])*
+						tanh(beta*Site[siteNeighs[k]].Cluster[cit].State[sit]));
+					shiftsite += log(cosh(beta*Jsite[k]) / cosh(beta*usite));
+					h0site += usite;
+				}
+				if (k < K){
+					ulink = T*atanh(tanh(beta*Jlink[k])*
+						tanh(beta*Site[linkNeighs[k]].Cluster[cit].State[sit]));
+					h0link += ulink;
+					shiftlink1 += log(cosh(beta*Jlink[k]) / cosh(beta*ulink));
+				}
+				else{
+					ulink = T*atanh(tanh(beta*Jlink[k])*
+						tanh(beta*Site[linkNeighs[k]].Cluster[cit].State[sit]));
+					g0link += ulink;
+					shiftlink2 += log(cosh(beta*Jlink[k]) / cosh(beta*ulink));
+					
+				}
+			}
+			//add low noise
+			
+			double noise = 0.0001;
+
+			h0 += noise*((double)rand() / RAND_MAX - 0.5);
+			h0site += noise*((double)rand() / RAND_MAX - 0.5);
+			h0link += noise*((double)rand() / RAND_MAX - 0.5);
+			g0link += noise*((double)rand() / RAND_MAX - 0.5);
+
+			double J0 = ((rand())>.5*RAND_MAX) * 2 - 1;
+
+			double v0 = T*atanh((tanh(beta*J0) + tanh(beta*h0link)*tanh(beta*g0link)) /
+				(1 + tanh(beta*J0)*tanh(beta*h0link)*tanh(beta*g0link)));
+
+			currSite->Cluster[cit].State[sit] = h0;
+			currSite->Cluster[cit].siteState[sit] = h0site;
+			currSite->Cluster[cit].linkState[sit] = v0;
+
+			double newlinkshift = 0;
+			double expo=0;
+			double sigma, tau;
+
+			
+			for (int tau = -1; tau <= 1; tau = tau + 2){
+				for (int sigma = -1; sigma <= 1; sigma = sigma + 2){
+					expo += exp(beta*J0*sigma*tau + beta*sigma*h0link + beta*tau*g0link);
+				}
+			}
+
+			newlinkshift = log(expo);
+
+			currSite->Cluster[cit].dFiter[sit] = shift + log(2 * cosh(beta*h0));
+			currSite->Cluster[cit].dFsite[sit] = shift + log(2 * cosh(beta*h0site));
+			currSite->Cluster[cit].dFlink[sit] = shiftlink1 + shiftlink2 + newlinkshift;
+		}
+
+	}
+
+}
+\end{verbatim}
+
+It is possible to note that in the last lines the weights are transformed into their cumulative, this will be used in the following routine.
+
+\section{The reweigh procedure}
+
+The simplest version of the reweigh is reported.
+
+\begin{verbatim}
+void myCluster::reweigh()
+{
+
+
+	// get weights
+	for (int it = 0; it < Ns; it++){
+		cumulativeIter[it] = exp(x_rsb*dFiter[Ns]);
+		cumulativeSite[it] = exp(x_rsb*dFsite[Ns]);
+		cumulativeLink[it] = exp(x_rsb*dFlink[Ns]);
+
+		if (it>0){
+			cumulativeSite[it] += cumulativeSite[it - 1];
+			cumulativeIter[it] += cumulativeIter[it - 1];
+			cumulativeLink[it] += cumulativeLink[it - 1];
+		}
+	}
+
+	//reweigh
+	for (int it = 0; it < Ns; it++){
+
+		double myRand = (double)rand() / RAND_MAX * cumulativeIter[Ns - 1];
+		int index = search_closest(cumulativeIter, myRand);
+
+		appIter[it] = State[index];
+
+		myRand = (double)rand() / RAND_MAX * cumulativeSite[Ns - 1];
+		index = search_closest(cumulativeSite, myRand);
+
+		appSite[it] = siteState[index];
+
+		myRand = (double)rand() / RAND_MAX * cumulativeLink[Ns - 1];
+		index = search_closest(cumulativeLink, myRand);
+
+		appLink[it] = linkState[index];
+		
+
+	}
+
+	for (int it = 0; it < Ns; it++){
+		State[it] = appIter[it];
+		siteState[it] = appSite[it];
+		linkState[it] = appLink[it];
+
+		
+		
+	}
+
+}
+\end{verbatim}
+
+The same procedure is obtained at cluster level.
+
+\begin{verbatim}
+void mySite::reweigh(){
+
+	for (int it = 0; it < Nc; it++){
+		
+		Cluster[it].reweigh();
+		Cluster[it].evaluate();
+			
+		cumulativeIter[it] = exp(y_rsb*Cluster[it].Fiter);
+		cumulativeSite[it] = exp(y_rsb*Cluster[it].Fsite);
+		cumulativeLink[it] = exp(y_rsb*Cluster[it].Flink);
+
+		if (it>0){
+			cumulativeSite[it] += cumulativeSite[it - 1];
+			cumulativeIter[it] += cumulativeIter[it - 1];
+			cumulativeLink[it] += cumulativeLink[it - 1];
+		}
+	}
+
+	//reweigh
+	for (int it = 0; it < Nc; it++){
+
+		double myRand = (double)rand() / RAND_MAX * cumulativeIter[Nc - 1];
+		int index = search_closest(cumulativeIter, myRand);
+
+		double myRandSite = (double)rand() / RAND_MAX * cumulativeSite[Nc - 1];
+		int indexSite = search_closest(cumulativeSite, myRandSite);
+
+		double myRandLink = (double)rand() / RAND_MAX * cumulativeLink[Nc - 1];
+		int indexLink = search_closest(cumulativeLink, myRandLink);
+
+		for (int jt = 0; jt < Ns; jt++){
+		
+			appCluster[it].State[jt] = Cluster[index].State[jt];
+		
+			appCluster[it].siteState[jt] = Cluster[index].siteState[jt];
+
+			appCluster[it].linkState[jt] = Cluster[index].linkState[jt];
+			
+
+		}
+	}
+
+	for (int it = 0; it < Nc; it++){
+		for (int jt = 0; jt < Ns; jt++){
+
+			Cluster[it].State[jt] = appCluster[it].State[jt];
+			
+			Cluster[it].siteState[jt]=appCluster[it].siteState[jt];
+			
+			Cluster[it].linkState[jt] = appCluster[it].linkState[jt];
+			
+		}
+	}
+
+}
+\end{verbatim}
+
+\section{Evaluation of each observable}
+
+The first routine reported is the one that averages the free energy at state level
+
+\begin{verbatim}
+
+void myCluster::evaluate(){
+	
+	double sum = 0, sumsite = 0, sumlink = 0;
+
+	for (int it = 0; it < Ns; it++){
+	sum     += exp(x_rsb*dFiter[it]);
+	sumsite += exp(x_rsb*dFsite[it]);
+	sumlink += exp(x_rsb*dFlink[it]);
+	}
+
+	Fsite = (1 / x_rsb)*log(sumsite / Ns);
+	Fiter = (1 / x_rsb)*log(sum / Ns);
+	Flink = (1 / x_rsb)*log(sumlink / Ns);
+}
+\end{verbatim}
+
+The second routine reported is the one that uses the state-level values and averages over the cluster level.
+
+\begin{verbatim}
+void mySite::evaluate(){
+
+	double beta = 1 / T;
+
+	double sum = 0, sumsite = 0, sumlink = 0;
+
+	for (int it = 0; it < Nc; it++){
+		sum += exp(y_rsb*Cluster[it].Fiter);
+		sumsite += exp(y_rsb*Cluster[it].Fsite);
+		sumlink += exp(y_rsb*Cluster[it].Flink);
+	}
+
+	Fsite = (-1 / beta/ y_rsb)*log(sumsite / Nc);
+	Fiter = (-1 / beta/ y_rsb)*log(sum / Nc);
+	Flink = (-1 / beta / y_rsb)*log(sumlink / Nc);
+
+	FREE_ENERGY = Fiter*(K + 1) / 2  - Fsite*(K - 1) / 2;
+	FREE_ENERGY2 = Flink*(K + 1) / 2  - K*Fsite;
+}
+
+\end{verbatim}
+
+The evaluation of the overlaps requires five 'for' cycles to be made. Since these cycles slow down the efficiency by a great amout, 
+they are only used in a particular set of runs. Here i report the alternative version for the preceding function, used for the evaluation of the overlaps.
+
+
+Among with that is reported the function that averages every observable on each site.
+
+\begin{verbatim}
+void mySystem::evaluate_observables(){
+
+        //free energy
+        MEAN = 0;
+        double beta = 1 / T;
+        
+        q0 = 0; q1 = 0; q2 = 0;
+        int c0 = 0, c1 = 0, c2 = 0;
+        for (int it = 0; it < Nh; it++){
+
+                MEAN += Site[it].FREE_ENERGY2;
+
+        }
+        
+        for (int it = 0; it < Nh; it++){
+
+                q0 += Site[it].q0;
+                q1 += Site[it].q1;
+                q2 += Site[it].q2;
+        }
+        
+        MEAN /= Nh;
+        q0 /= Nh; q1 /= Nh; q2 /= Nh;
+}
+\end{verbatim}
+\section{System structure and memory reservation}
+In this section the definition of the variables used is provided.
+
+\begin{verbatim}
+#pragma once
+#include "defines.h"
+
+
+class myCluster
+{
+public:
+	myCluster();
+	~myCluster();
+
+	double State[Ns];
+	double siteState[Ns];
+	double linkState[Ns];
+
+	double appSite[Ns];
+	double appIter[Ns];
+    double appLink[Ns];
+    
+	double dFiter[Ns];
+	double dFsite[Ns];
+	double dFlink[Ns];
+
+
+	double Fiter;
+	double Flink;
+	double Fsite;
+
+	double x_rsb;
+
+	double cumulativeIter[Ns];
+	double cumulativeSite[Ns];
+    double cumulativeLink[Ns];
+    
+	void reweigh();
+	void evaluate();
+
+};
+
+class mySite
+{
+public:
+	mySite();
+	~mySite();
+
+	class myCluster Cluster[Nc];
+	class myCluster appCluster[Nc];
+
+	double y_rsb;
+
+	double cumulativeSite[Nc];
+	double cumulativeIter[Nc];
+    double cumulativeLink[Ns];
+
+	void reweigh();
+	void evaluate();
+
+	double Fiter;
+	double Fsite;
+	double Flink;
+
+	double FREE_ENERGY;
+
+
+};
+
+class mySystem
+{
+
+public:
+	mySystem();
+	~mySystem();
+
+	class mySite Site[Nh];
+	class mySite *currSite;
+
+	int time;
+	int currSiteIndex;
+
+	//methods
+	void choose_sites();
+	void write_file();
+
+	void merge_fields();
+
+	//neighbors
+	int siteNeighs[K + 1], Jsite[K + 1];
+	int linkNeighs[2 * K], Jlink[2 * K];
+	int iterNeighs[K], Jiter[K];
+
+	void evaluate_observables();
+	fstream fileStream;
+
+	double MEAN;
+};
+
+\end{verbatim} 

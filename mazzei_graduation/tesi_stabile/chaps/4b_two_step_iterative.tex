@@ -1,0 +1,36 @@
+\section{Iterative construction}
+
+The first step is the evaluation of every observable at state level: we have to generate the iterative fields $h_0^{\alpha\gamma}$, the site fields $H_0^{\alpha\gamma}$, obtained by adding a site to the system, and the link fields $v_0^{\alpha\gamma}$, the auxiliary fields obtained adding a link to the system (\cite{bethe} ). Every field is evaluated as follows:
+
+\begin{equation}
+h_0^{\alpha\gamma} = \mathcal{M}(h_1^{\alpha\gamma},\ldots,h_k^{\alpha\gamma})
+\label{accazero}
+\end{equation}
+\begin{equation}
+H_0^{\alpha\gamma} = \mathcal{M}(h_1^{\alpha\gamma},\ldots,h_{k+1}^{\alpha\gamma})
+\end{equation}
+\begin{equation}
+v_0^{\alpha\gamma} = {1\over\beta}\atanh\frac{\tanh(\beta J) + \tanh(\beta h_0^{\alpha\gamma})\tanh(\beta g_0^{\alpha\gamma})}{1+\tanh(\beta J)\tanh(\beta  h_0^{\alpha\gamma})\tanh(\beta g_0^{\alpha\gamma})}
+\end{equation}
+
+where $g_0$ is evaluated using \ref{accazero}. These three fields are sampled at state level (the leaves of the tree). At each level we have to perform a reweigh with a weight given by equations \ref{distro2} and \label{distro1}. This will return the correct distribution that will we be used to perform the mean values that will be passed to the higher levels.
+In order to evaluate each mean value we will take advantage of the equations reported in appendix C. 
+
+Each time we add a step of RSB the only two operations we have to perform are a reweigh of its substates and a set of mean values calculations. This could suggest an iterative procedure to investigate the Bethe lattice spin glass at any desired level $l_{max}$ of RSB: 
+The different weight at each level is moduled by the $x$ of the considered one. At each level $l$ we introduce a new parameter for $x$, and we have to determine which set of $\{x_1,\ldots ,x_{l_max} \in [0,1]^{l_max}$ maximizes $F$.
+
+The only different level is the leaf one: at this stage we have to perform the merging procedure and find the values of $h_0$, $H_0$ and $v_0$. Once these are determined, we reweigh and average at each level $l$ using $x_l$.
+
+
+
+
+
+
+
+
+
+
+
+
+
+

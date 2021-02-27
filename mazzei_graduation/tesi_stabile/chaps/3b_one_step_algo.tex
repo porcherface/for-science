@@ -1,0 +1,100 @@
+\chapter{The one step RSB algorithm}
+
+In this chapter I will give a brief description of the one step RSB algorithm, since the procedurenow  described is a part of the two step RSB one that will be developed in the next chapter. A full discussion may be found in \cite{bethe}. Since the method can be used
+
+The algorithm is meant to implement equation \ref{1solution} using a population dynamics algorithm, in a similar way to what happens in the RS case. Obviously some modifications from the original algorithm are required.
+
+The main difference relies in the presence of exponential weight in equation \ref{eqdf}
+
+In order to reweigh the fields obtained according to \ref{eqdf}, we have to satisfy the following equation, \ref{reweigh}. We can see that equation \ref{reweigh} contains two cumulative distributions, the left member is the cumulative of the probability density function of the fields before the insertion of the cavity spin, while the right member is the one after this insertion.
+
+\begin{equation}
+\frac{1}{\sum_\alpha \exp(-\beta x \Delta F^{\alpha}) }\sum_\alpha \exp(-\beta x \Delta F^{\alpha}) \Theta(h-{h_{0}^{\alpha}}) = \frac{1}{N_s}\sum_\alpha \Theta(h-h^{\alpha})
+\label{reweigh}
+\end{equation}
+
+There are various methods for obtaining this reweigh. Some have been investigated in \cite{bethe}. A general discussion is available on \cite{trattatello}. Once the correct fields are obtained, it is possible to evaluate every site and link observable, similary to what happened in the RS case. Every observable has to be averaged over the state distribution. We will see in the next section how this is performed.
+
+Let's now summarize the passages of the one step RSB algorithm.
+
+\begin{enumerate}
+    \item{Define $N_h$ sites.}
+    \item{For each site, generate $N_s$ fields. Fields may be i.i.d. random variables in the unitary interval, as example.}
+    \item{Choose $K$ sites at random, among with $K$ values for $J$.}
+    \item{For each field of each of the $K$ sites, generate the field $h_0$ using \ref{merge1}.}
+    \item{The $N_s$ values for ${h_0}^\alpha$ (where $\alpha$ runs on $\{1,\ldots,N_s\}$) are not the fields that will be used in the merging population, at this point one has to consider the free energy shift given by equation \ref{eqdf}. This is done by generating a new population of fields $h^\alpha$ that, given the old set ${h_0}^\alpha$ satisfies equation \ref{reweigh}. }
+    \item{Choose a site $i$ to update, this can be either random chosen or sequentially chosen.}
+    \item{Substitute ${h_i}^\alpha$ with ${h_0}^\alpha$. Start again from point 3.}
+\end{enumerate}
+
+While this generates a field distribution that resembles the equilibrium one, it must not be used to compute the site and field observables. In order to evaluate the overlaps, the internal energy and the free energy, we have to do the same operation as before, this time adding a new site to the system and a new link. Thus we have to merge $K+1$ branches into a new site for the site contributions, and we have to insert two new spins attached to $K$ branches each, and then merge those two, in order to get the correct link distribution.
+
+When we generate the true fields by merging $K+1$ branches we have to do the same procedure we do when we obtain the iterative fields $h_\alpha$, but using the site free energy $\Delta F_s$. In order to obtain the link quantities, such as the link contribution to the free energy, the internal energy and the link overlaps, we introduce the auxiliary field $v_0^\alpha$
+
+\begin{equation}
+v_0^{\alpha} = {1\over\beta}\atanh\frac{\tanh(\beta J) + \tanh(\beta h_0^{\alpha})\tanh(\beta g_0^{\alpha})}{1+\tanh(\beta J)\tanh(\beta  h_0^{\alpha})\tanh(\beta g_0^{\alpha})}
+\end{equation}
+
+The reweigh procedure for the $v_0^\alpha$ will be performed using the bond free energy shift $\Delta F_l$, evaluated using equation \ref{linkdf}.
+Once the iterative fields, the site fields and the link auxiliary fields are obtained it is possible to evaluate every observable.
+
+\subsection{Observables evaluation}
+
+Using equation \ref{links} we can evaluate the internal energy $U$:
+
+\begin{equation}
+U= {1 \over N_s}\sum_{\alpha} \tanh (\beta v_\alpha)
+\end{equation}
+
+The overlaps are evaluated with the aid of equations \ref{qsite} and \ref{qlink}
+
+\begin{eqnarray}
+	q_0 &=& {1 \over N_s}\sum_{\alpha} \tanh(\beta h^{\alpha})\tanh(\beta h^{\alpha}) \nonumber  \\
+	q_1 &=& {1 \over N_s} \sum_{\alpha'\neq\alpha} \tanh(\beta h^{\alpha})\tanh(\beta h^{\alpha'})\nonumber
+\end{eqnarray}
+
+The link overlaps are evaluated with the same set of equations, this time using $v^\alpha$ instead of $h_\alpha$.
+
+\begin{eqnarray}
+	q_0^{(l)} &=& {1 \over N_s}\sum_{\alpha} \tanh(\beta v^{\alpha})\tanh(\beta v^{\alpha})  \nonumber \\
+	q_1^{(l)} &=& {1 \over N_s} \sum_{\alpha'\neq\alpha} \\tanh(\beta v^{\alpha})\tanh(\beta v^{\alpha'})\nonumber
+\end{eqnarray}
+
+The free energy is obtained summing the site and link contributions (equations \ref{sitedf} and \ref{linkdf}).
+
+\begin{equation}
+F = {K+1 \over 2} F_{l} - K F_s
+\label{sitepluslink}
+\end{equation}
+
+It is also possible to compute the free energy using a different method. Since this does not involve a computation of the link observables and of the auxiliary fields $v_\alpha$, it has been used in the ealy phases of the investigation to obtain faster results in the free energy evaluation. On the saddle point the free energy may be evaluated using the iterative free energy $F_{iter}$ and the site free energy $F_s$. The total free energy can be estimated using the following formula \cite{bowman}
+
+\begin{equation}
+F = {K+1 \over 2} F_{iter} - {K-1 \over 2} F_s
+\label{saddle}
+\end{equation}
+
+Moreover, differently from what happened in the RS case, we have to evaluate the site and bond contribution to the free energy x-derivative. These two contributions can be evaluated as:
+
+\begin{eqnarray}
+d_s(x) &=& {-1\over \beta x} \log[ \sum_\alpha \exp(-\beta x \Delta {F_s}^\alpha) \log \Delta {F_s}^\alpha ]  \nonumber \\
+d_l(x) &=& {-1\over \beta x} \log[ \sum_\alpha \exp(-\beta x \Delta {F_l}^\alpha) \log \Delta {F_s}^\alpha ] \nonumber
+\end{eqnarray}
+
+\section{Comparison between RS and 1 RSB solutions}
+
+It is useful to compare the results of \cite{bethe} to the ones obtained in the RS framework. In the RS theory we find the following values for the free energy $F$, internal energy $U$ and RS site overlap $q$
+
+\begin{equation}
+F = -1.863 \pm 0.002  \hspace{1 cm} ,U = -1.816 \pm 0.002  \hspace{1 cm} , q_0 = 0.6863 \pm 0.0002
+\end{equation}
+
+At a level of 1 RSB we have to find the value of $x$ that maximizes the free energy $F$. This has been estimated in \cite{bethe} and the authors found $x = 0.24$. The most relevant observables estimated with this value of $x$ are
+
+\begin{eqnarray}
+F &=& -1.858 \pm 0.002 , \hspace{1 cm}  U = -1.799 \pm 0.001 \nonumber \\
+q_1 &=& 0.779 \pm 0.006 , \hspace{1 cm} q_0 =  0.30 \pm 0.02 \nonumber
+\end{equation}
+
+The results obtained in 1 RSB theory strongly improves the evaluation of $F$ and $U$.
+We will show in the next section that is possible to improve further the results obtained. 

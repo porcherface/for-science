@@ -1,0 +1,53 @@
+\section{Bethe lattice spin glass}
+
+\subsection{Definition and Hamiltonian of the model}
+
+Let's consider a set of $N$ Ising spins located on the sites of a Bethe lattice of coordination number $K$ . Each interaction (pictorially represented by each link in the lattice) is chosen at random between two values $\pm J$. $J$ will be set equal to 1. The Hamiltonian of the system is
+
+\begin{equation}	
+\mathcal{H}= \sum_{\<ij\>} J_{ij} \sigma_{i}\sigma{j}
+\label{hamiltonian}
+\end{equation}
+
+where the symbol $\<ij\>$ indicates every couple $(i,j)$ connected by a link.
+
+The main feature of this model is the tree-like structure of the lattice where it is defined. A tree is a graph where each pair of nodes (the sites) is connected by exactly a single simple path (the links).
+
+Since the model is defined on a tree, each time we remove a site from the system, we divide it in $K$ subsystems, each non interacting with the others. Each subsystem has exactly the same structure of the lattice from which we removed a site. We will see in the next section that the action of these subsystems on the site removed (that now we re-insert) will lead to a self consistent equation relatively simple to understand.
+We notice en-passant that this procedure will be possible due to the autosimilar structure of the Bethe lattice (more precisely, of the Cayley tree).
+
+\section{Monte Carlo simulation of the spin glass}
+
+During the early phase of this work, a Monte Carlo (MC) simulation of the system described has been performed. The algorithm used is a simple single spin flip with Metropolis acceptance (\cite{MCMC} for further readings on MCMC methods and Metropolis).
+All the simulation have been made at temperature $T = 0.8$ with $K = 6 $; $T$ and $K$ have been chosen in order to compare my result with the one found in \ref{bethe} and \ref{zullo}.
+
+\subsection{Generation of the random lattice}
+
+The random lattice has been generated with an unusual procedure.
+Let's remember what are the characteristics of a genuine random graph:
+\begin{itemize}
+
+\item{No auto links are present}
+\item{Two sites must be connected by at most one link}
+\item{Graph must not be divided in two or more non comunicating sub graph}
+
+\end{itemize}
+
+I have realize a random lattice using a simulated annealing. The cost function of the annealing is equal to the number of auto links plus the number of double links.
+With this construction turns out that the cost of a good random graph is zero. The configurations are explored swapping the second extremals of two links taken at random. The configuration space with this evolution from a configuration to another is intuitively ergodic, and it is possible to create a genuine random graph in a someway small computation time.
+
+Each time a genuine random graph is found by the annealing, a routine controls if the graph is bipartite; if not each link is saved into a new file and the routine is restarted with a different number of sites.
+In this way I've generated a huge number of lattices, that later have been used in simulations.
+
+\subsection{Evaluation of observables in a spin glass phase}
+
+Since the MC evolution of the spin glass on Bethe lattice under the critical temperature is non ergodic, a single simulation risks to estimate badly the relevant observables, (I recall that it is possible to evaluate easily the mean magnetization, EA order parameter and internal energy in an easy way). Thus I've generated several copies of the system, some of them at temperature $T$, others at higher temperatures. The evolution of the system has been made with parallel tempering (for reference on parallel tempering \cite{tempering}), that allowed me to measure internal energy with relatively high precision.
+
+\begin{equation}
+U = -1.798 \pm 0.005
+\end{equation}
+
+In the past years researchers performed simulations on BLSG (as previously mentioned). An example is given by the simulations performed in Rome, reported in this article: \cite{zullo}. The authors evaluated the internal energy in the spin glass phase ($T = 0.8$) and obtained a value for $U$ of:
+\begin{equation}
+U = -1.799 \pm 0.001
+\end{equation}

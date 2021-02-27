@@ -1,0 +1,139 @@
+%% Based on a TeXnicCenter-Template by Gyorgy SZEIDL.
+%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+%----------------------------------------------------------
+%
+\documentclass{amsbook}%
+%
+%----------------------------------------------------------
+% This is a sample document for the AMS LaTeX Book or Monograph Class
+% Class options
+%       --  Body text point size:
+%                        8pt, 9pt, 10pt (default), 11pt, 12pt
+%       --  Paper size:  letterpaper (8.5x11 inch, default), a4paper
+
+%       --  Orientation: portrait(default), landscape
+%       --  Print side:  oneside, twoside (default)
+%       --  Quality:     final(default), draft
+%       --  Title page:  titlepage, notitlepage
+%       --  Start chapter on left:
+%                        openright (no, default), openany
+%       --  Columns:     onecolumn (default), twocolumn
+%       --  Omit extra math features:
+%                        nomath
+%       --  AMS fonts (noamasfonts available):
+%                        noamsfonts
+%       --  PSAMSfonts (fewer AMSfontsizes)
+%                        psamsfonts
+%       --  Equation numbering (equation numbers on the left is the default)
+%                        leqno (default), reqno
+%       --  Equation centering (equations centered is the default)
+%                        centeredtags (default}, tbtags (top, bottom)
+%       --  Displayed equations (centered is the default)
+%                        fleqn (flush left)
+% For instance the command
+%          \documentclass[a4paper,12p,reqno]{amsbook}
+% ensures that the paper size is a4, fonts are typeset at the size 12p
+% and the equation numbers are on the right side.
+%
+\usepackage{amsmath}%
+\usepackage{amsfonts}%
+\usepackage{amssymb}%
+\usepackage{graphicx}
+\usepackage{hyperref}
+\usepackage{color}
+\usepackage{datetime}
+
+\DeclareMathOperator{\Tr}{Tr}
+\DeclareMathOperator{\atanh}{atanh}
+%----------------------------------------------------------
+\theoremstyle{plain}
+\newtheorem{acknowledgement}{Acknowledgement}
+\newtheorem{algorithm}{Algorithm}
+\newtheorem{axiom}{Axiom}
+\newtheorem{case}{Case}
+\newtheorem{claim}{Claim}
+\newtheorem{conclusion}{Conclusion}
+\newtheorem{condition}{Condition}
+\newtheorem{conjecture}{Conjecture}
+\newtheorem{corollary}{Corollary}
+\newtheorem{criterion}{Criterion}
+\newtheorem{definition}{Definition}
+\newtheorem{example}{Example}
+\newtheorem{exercise}{Exercise}
+\newtheorem{lemma}{Lemma}
+\newtheorem{notation}{Notation}
+\newtheorem{problem}{Problem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{remark}{Remark}
+\newtheorem{solution}{Solution}
+\newtheorem{summary}{Summary}
+\newtheorem{theorem}{Theorem}
+\numberwithin{equation}{section}
+
+\newcommand{\HRule}{\rule{\linewidth}{0.5mm}}
+%-----------------------------------------------------------
+\begin{document}
+\frontmatter
+
+\input{chaps/00_title.tex}
+
+%\subjclass{La Sapienza, University of Rome, Theoretical physics master degree final discussion}
+
+\dedicatory{Dedicated to all my teachers, no one excluded}
+
+\begin{abstract}
+This work investigates the replica symmetry breaking (RSB) of
+Bethe lattice spin glass in the glassy phase.
+The main goal is to determine a procedure capable of exte
+nding the
+one step RSB results to higher ones.
+Also a formulation of an algorithm that evaluates the two step RSB overlaps is provided.
+
+\end{abstract}
+
+\maketitle
+
+\tableofcontents
+
+
+\chapter*{Preface}
+\input{chaps/0_introduction.tex}
+
+\mainmatter
+
+\part{The Bethe lattice spin glass}
+
+
+\input{chaps/0b_another_intro.tex}
+\input{chaps/1_spin_glass.tex}
+\input{chaps/1b_bethe_lattice.tex}
+
+\part{Up to one RSB}
+
+\input{chaps/2_replica_symmetric.tex}
+\input{chaps/3_one_step_solution.tex}
+\input{chaps/3b_one_step_algo.tex}
+
+
+
+\part{Two step RSB}
+
+\input{chaps/4_two_step_rsb.tex}
+\input{chaps/4b_two_step_iterative.tex}
+\input{chaps/5_algo.tex}
+\input{chaps/5b_algo_detail.tex}
+\input{chaps/6_results.tex}
+
+\input{chaps/7_conclusions.tex}
+
+\backmatter \appendix
+
+\input{chaps/appendix2.tex}
+
+\begin{thebibliography}{9}
+\input{chaps/biblio.tex}
+
+\end{thebibliography}
+
+\end{document}

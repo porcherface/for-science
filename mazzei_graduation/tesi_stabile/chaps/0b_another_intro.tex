@@ -1,0 +1,62 @@
+
+\chapter{Introduction to this work}
+
+Since the following of this work will be a bit mathematical, this start is voluntary intended to be much more informal. I would like to spend here a few minutes on a talk on what a spin glass is in everyday life, and why it is so much interesting to me.
+
+When someone asks me to explain what a spin glass is, it's often very difficult to me to answer in a few simple words that won't seem too technical or somewhat abstract. 
+%A much harder job is to answer to the prosecution of the first question, that is -and how do you use it? what do this describe-.
+I usually describe the spin glasses to my friends as a collection of variables (where a single variable may be a circle with a color inside, a light bulb, a computer bit, ) that interact each other, i.e. the state of one variable influences the state of the other. Each of these interaction may be different. If we imagine, as example, a number of persons in a network of social relations, some of these may be friends, while
+others may be foes. It is straightforward that one can imagine a very wide class of situations that can be identified with this picture. Sometimes during these discussions my friend ask if there is some example
+ of \textquotedblleft real \textquotedblright  spin glass. Is the brain a spin glass, having excitatory and inhibitory interaction between neurons? I usually respond yes, it. Of course our brain is not a spin glass.
+It is much more complex than what I've just described. Neurons have a physiology, a great number of different subsystems, having a lot different functions and structure. There are different neurons, distinguished by location, extention, shape and task. However, in a highest simplification, we can imagine that a brain is somehow a collection of units that communicate in a non-trivial way.
+-
+Another common question has to do with everyday life: it is not rare that someone asks if spin glasses are \textquotedblleft real\textquotedblright objects. Is it possible to find a spin glass in nature? It resembles the structure of a defected crystal? What are the practical application of a spin glass material? In fact it is possible to find examples of \textquotedblleft real \textquotedblright spin glasses. As an example,
+Bismuth ferrite may be modeled by a particular spin glass. But this is not the point. The aim of these analogies is to clarify that spin glasses are an extreme simplification of a very wide class of systems.
+Every system of this class has a common characteristic with the others. The complexity of its behaviour
+relies not in the structure of its components, but in the interactions they have (in fact, they have been called \textquotedblleft a few grams of boring materials, but..\textquotedblright). Spin glasses are a powerful example of non-reductionist objects.
+
+Spin glass models have been used for a huge variety of applications. Most of them are not strictly connected with condensed physics and crystals. They have been used with great success in neuroscience (as anticipated naively before), optimization theory, finance, image analysis, social network analysis and many other fields. As one can imagine, the developement of knowledge in the field of spin glasses is now very interdisciplinar, and while an experimental investigation on real spin glasses has slowed down, the interest of theoretical physicists in this field has very much arisen in the past years; spin glasses are still nowadays an oben subject in science.
+
+-Why the word glass? This has nothing to do with glasses-. This is false. And the similarity with common glasses is straightforward. Glasses are not crystals, they don't have an ordered structure. In the same way, a spin glass does not have an ordered scheme of interactions. We can say that ordinary glasses have a positional disorder, while spin glasses have an interaction disorder. This won't seem enough, but in reality they share much more than this. Have you ever seen glass drain as it is liquid? If you look at a mirror, you will not be able to see that it is draining down to the floor. But this happens. It is obviously a very slow process, but in a couple of hundreds of years spent looking, you will surely notice it. Glasses change slowly on time (this can be observed in Roman churches, where the glass on the windows forms drops big enough to be observed with naked eye).
+This is common feature of spin glasses either, and is called \textquotedblleft slow relaxation\textquotedblright.
+
+This brings us to the next keyword of our spin glass: disorder. A spin glass is a disordered system. We find the disorder in the fact that we don't know how the components of the glass are going to interact. The changing of these interactions leads to a different situation? Two situations driven from two different interactions share some common proprieties? Is it possible to obtain a number of results independent from this confusing set of interactions?
+What are the mathematical methods that one must use in order to deal with this lack of informations? Is it possible to describe how a spin glass behave in a complete way?
+
+Spin glasses are a relatively recent field of studies. Some of the questions just proposed have an answer, some others don't.
+
+\vspace{10 mm}
+
+I decided to dedicate my studies on this field mostly for three reasons. The first can be found in the universitary course I've attended. It was called \textquotedblleft Statistical mechanics of disordered systems \textquotedblright, held by the professor E. Marinari. He has been definitely able to transmit to his students his passion on this argument. He taught us the mathematical framework that is used in this class of problems, being able to explain in a simple way a very complicated argument. He showed us the construction of the Parisi's solution of the mean field spin glass (the most studied and somehow ambassador of spin glasses), revealing the outstanding features it concealed. I've been able, thanks to his course, not only to understand how vast and fascinating this world is, but even to learn the complicated methods of investigation used in this field, such as the dimensional reduction, the averaging over disorder, the Lee Yang theorem, and the replica trick, just to mention a few.
+
+The second one is much more personal, though not completely uncorrelated from the first one: I see a honest beauty in the spin glass models. I think that they provide the key to the understanding of a lot of phenomenons, though having a very idealized scheme. They are seen by me (and many others in reality) as the starting point of the understanding of complexity. A game with a few simple rules but a huge amount of possibilities. If somebody knows what the \textquotedblleft game of life\textquotedblright is, he will certainly catch the point (otherwise he can read this \cite{life}).
+Everyone who knows me, knows how much I like riddles and puzzles and how much I feel comfy with disorder. And overall, knows how much i like gaming.
+I see spin glasses as a simple game (with this I mean with simple rules), where the results are unexpected. The same system may behave in a number of different ways, and disorder is the key element in this process.
+
+This leads directly to the third reason. It is a bit more technical, and is the Replica symmetry breaking (RSB). In order to  explain in a few words what RSB is, let me tell briefly what the replica trick is.
+The replica trick is a method to transform the averaging over disorder of a system into an interaction between different copies of the system itself. We now have a large number of replicas of the system, and the configuration of one of them will now influence the others. Now it is mandatory to remind that these replicas are fictitious ones, and I am describing a mathematical passage that goes from a situation that depends from an unknown set of parameters (the disorder) to a situation where several copies of the starting system interact (with no disorder now). The real system (sometimes we say \textquotedblleft the physics\textquotedblright) is obtained sending this large number of replicas to zero! RSB means that each copy will behave differently (even if there are zero copies, a good dose of abstraction is required). Physically, this means that there is not a single valid configuration of the system (let me call it a solution, using a slightly wrong language for now), but an infinite number of these. An infinite number of solutions to the problem exists, each significantly different from the others. A small change in the initial configuration will result in a completely new solution. I personally read this as follows: disorder brings asymmetry, among with asymmetry we can see complexity. And complexity is what makes this universe so variegate.
+
+If it was a clean, ordered, symmetric universe, would it been so beautiful? I think it wouldn't be observable either.
+
+\vspace{10 mm}
+
+The development of this work has been suprisingly enjoyable. I usually like to work with numerical investigations, and this final exam made no exception. It is a pleasure to dedicate time to something one really likes: this work involved a nice combination of mathematics and computing; Bethe lattice spin glass problem presents a number of results that may be obtained exactly, but each solution has to be implemented on a calculator. This mixture of analytical and numerical methods made me very satisfacted of these last months as a physics student.
+
+\vspace{10 mm}
+
+A small footnote, the possibility of having Prof. Parisi as a supervisor is to me a great source of joy. He opened the pandora's box on spin glasses (not my words) and I personally thank him for what he has done.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

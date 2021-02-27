@@ -1,0 +1,8 @@
+un piccolo script che fa vedere come per molte condizioni iniziali la densità invariante sia 
+\rho = 1. La condizione iniziale viene copiata da un'immagine. la mappa scelta è la c.a.t. map
+
+
+il pacchetto include video + sorgenti.
+le sorgenti sono scritte in matlab
+
+riccett

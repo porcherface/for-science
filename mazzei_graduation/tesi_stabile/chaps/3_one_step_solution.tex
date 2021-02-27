@@ -1,0 +1,140 @@
+\chapter{Formulation of 1 step solution}
+
+In this chapter I will present a solution (ideated by Mezard and Parisi, proposed in detail in \cite{bethe}) valid at a one step level of replica symmetry breaking, using the cavity method. Similarly to what has been done in the previous chapter, I will first derive the self consistent equation for the distribution of local fields, then I will show the equivalence with the replica formalism at a level of 1 RSB (that's why this solution will be called, despite the term may sound improper, 1 RSB solution). In the last section I will give a review of the results obtained by the authors of the original paper \cite{bethe}.
+
+\section{Preliminary remarks}
+If we introduce the possibility of the existence of many pure states the field probability distribution becomes different for every state. If we label each of these with $\alpha$ the probability distribution will depend on $\alpha$:
+
+\begin{equation}
+Q_i(\emph{h}) = \prod_\alpha Q_i(h^\alpha)
+\end{equation}
+
+The number of states $N_s$ must go to $+\infty$, but we can assume $N_s$ large but finite. Setting the value $N_s \rightarrow \infty$ too early may result in a bad definition of the field distribution.
+
+The factorization over the states means that the probability distribution in each state is uncorrelated from the others. Simple cavity arguments can demonstrate that this assumption is correct for large $N_s$.
+
+Every state has a probability distribution $\rho$ that follows an exponential law:
+
+\begin{equation}
+\rho(F) = \exp(-\beta x (F-F_R))
+\label{distr}
+\end{equation}
+
+The reason of why the states are sampled with exponential distribution is found in the fact that \ref{distr} is the only distribution stable under little variations of $F$.
+
+\begin{equation}
+\rho(F+\delta F) = \exp(\beta x (F + \delta F-F_R))
+\label{distrd}
+\end{equation}
+
+We will se now how the technique used to write the self consistent equation is similar to the one used in the replica symmetric solution, giving particuar emphasis on the step where replica symmetry is broken.
+
+\subsection{Pure states and mixtures}
+
+Since the term \emph{pure state} will be used often in the discussion, let us give briefly the definition of pure state. A state of a system is said to be a pure state if exists a measurable quantity that returns an outcome perfectly determined when evaluated on that state. A linear combination of pure states is a pure state.
+
+\section{One step RSB with cavity method}
+
+Let's start by considering again the BLSG. As in Bethe Peierls solution, we know that the field in the cavity site may be expressed in terms of the fields on the branches attached to it.
+
+\begin{equation}
+h_0^\alpha = \sum_{i=1}^K u(J_i,h_i^\alpha)
+\label{merge1}
+\end{equation}
+
+Nevertheless a particular attention must be taken when we merge $K$ branches into our cavity site. When we add the cavity site to the system each of the previously uncorrelated branches becomes now correlated.
+Let's call  $P_0(h_0,\Delta F)$ the joint distribution of $h_0$ and $\delta F$, of which the states $\alpha$ are a sample. When we merge $K$ branches the free energy $F^\alpha$ of each state will shift by $\delta F$: $G^\alpha =F^\alpha + \Delta F^\alpha$. The distribution of the new local field is given by
+
+\begin{equation}
+R_0(h_0,G) = C\int{dFd\[\Delta F\]\exp(\beta x(F-F^R))P_0(h_0,\Delta F)\delta(G - (F+\Delta F))}
+\label{1RSB}
+\end{equation}
+
+It is convenient to write the joint distribution $R_0$ in terms of the field distribution.
+\begin{equation}
+R_0(h_0,G) = C'\exp(\beta x(G-F^R))Q_0(h_0)
+\end{equation}
+
+where $Q_0$ is the same field distribution of the RS solution, but weighted with the free energy shift, (here is the main difference with RS case, where this weight was not present in the integral self consistent equation; we will see later that each RSB step brings with him a reweigh at a different state level).
+
+\begin{equation}
+Q_0(h_0) = C\int{d[\Delta F]\exp(-\beta x\Delta F)P_0(h_0,\Delta F)}
+\label{eqdf}
+\end{equation}
+
+If we take a close look to equation \label{1RSB} it is possible to give an interpretation of the terms it contains. The exponential weight gives the correct Boltzmann weight for the state considered, the joint distribution $P_0$ is the one containing information on the field distribution before the reweigh, the final delta is simply a selector of those free energies equal to  $F + \Delta F$.
+
+It is now time to write the same recursion relation we wrote in the replica symmetric approximation. By having
+
+\begin{equation}
+Q_0(\emph{h})=Q(\emph{h})
+\label{1solution}
+\end{equation}
+we obtain the recursion relation we were searching (we remember that the bold font is used to refer to the factorization on all states considered. In the end the number of states is sent to infinity. Note how the self consistent equation will change respect to the one found in \ref{RS}: in the simpler case we had only an uncorrelated distribution of $h$ and $\delta F$.
+\begin{equation}
+Q_0(h_0) = C\int{d[\Delta F]P_0(h_0,\Delta F)}
+\end{equation}
+
+
+\section{Evaluation of free energy}
+
+Now that we take into account the co-existence of several pure states, every observable has to be averaged over the states distribution. Let's see how it is done, evaluating the iterative free energy and comparing it with the simple RS iterative free energy.
+
+The site contribution of the free energy can be evaluated as follows ($E_J$ represents the average over all possible values of $J$, and is the averaging over the disorder):
+
+\begin{equation}
+-\beta F_s = E_J\langle \ln \sum_{\alpha} W^\alpha \exp[-\beta \Delta F_s(J_1\ldots,h_1\ldots,h_{K+1})] \rangle
+\end{equation}
+
+Using the theorem of Appendix C we can transform $F$ in a useful way
+
+\begin{equation}
+ F_s = -\frac{1}{\beta x} \langle \ln {1 \over N_s}\sum_{\alpha}\exp[-\beta \Delta F_s (J_1\ldots,h_1\ldots,h_{K+1})] \rangle
+ \label{feval}
+\end{equation}
+
+The bond contribution is evaluated using the free energy shift obtained when adding a new cavity bond to the system (the variable $J$ without any index is the cavity bond:
+
+\begin{equation}
+-\beta F = E_JE_{L}\langle \ln \sum_{\alpha} W^\alpha \exp[-\beta \Delta F_l(J,J_1\ldots,h_1\ldots,L_1\ldots,g_1\ldots,g_{K},)] \rangle
+\end{equation}
+
+
+A simplified form  for $F$ is available evaluating two different site contributions, as previously happened in RS case.
+In order to find the correct physical situation, it is well known \cite{wellknown} that one must find the value of the parameter $x$ for which the free energy $F$ is maximized. The x-derivative of equation \ref{feval},$d(x) = {dF \over dx}$ can be exactly evaluated.
+
+\begin{equation}
+d(x) = {-F\over x} - K d_s(x) + {K+1 \over 2} d_l(x)
+\end{equation}
+
+where the two contributions are given by
+
+\begin{eqnarray}
+d_s(x) &=& {-1\over \beta x} \log[ \sum_\alpha \exp(-\beta x \Delta {F_s}^\alpha) \log \Delta {F_s}^\alpha ]  \nonumber \\
+d_l(x) &=& {-1\over \beta x} \log[ \sum_\alpha \exp(-\beta x \Delta {F_l}^\alpha) \log \Delta {F_s}^\alpha ] \nonumber
+\end{eqnarray}
+
+These two contributions will be derived in appendix B.
+An evaluation of the zero of $d(x)$ returns a value of:
+
+\begin{equation}
+x* \equiv \{x:d(x)=0\} = 0.24 \pm 0.01
+\label{star}
+\end{equation}
+
+If we compare the free energy formula with the one obtained in the replica symmetric approximation we may note that if we consider a single state $\alpha$ the free energy becomes equal to the free energy shift obtained in the previos sections.
+
+\subsection{Equivalence with the replica formalism}
+
+As in previous chapter, we redirect to a demonstration of the equivalence of the Mezard and Parisi solution with the replica solution at a level of one RSB.
+
+In the one step RSB framework we have to divide the $n$ replicas into $n/x$ groups of replicas (labeled by \alpha).
+\begin{equation}
+\sigma_\alpha = \sum_{i \app \alpha} \sigma_i
+\end{equation}
+
+The authors of \cite{bethe} showed that, making an ansatz that restricts the possible probability distribution as factorized on the different block values, and using a result obtained in \cite{wong}, the one step RSB free energy is equivalent, in the small $n$ limit, to the one found in the preceding section.
+
+We shall not provide the details of this procedure, which has been investigated in detail in \cite{bethe}.
+
+

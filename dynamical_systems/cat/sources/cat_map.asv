@@ -1,0 +1,69 @@
+%% C.A.T. map - riccetto88@gmail.com
+
+clc
+close all
+clear all
+
+%% Cronometro
+stopwatch = tic;
+
+%% Setting parametri
+N = 1e4;         %numero di sonde
+in = zeros(N,2); %vettore delle sonde
+
+T = 50;         %tempo totale
+
+%% Condizioni iniziali
+[Z nx ny] = picstart(); % carica un set di sonde iniziali
+                        % utilizzando un'immagine
+                        
+n=1;
+while n<N
+    
+    x=rand(1);
+    y=rand(1);    
+   
+    if Z(floor(ny*y)+1,floor(nx*x)+1)
+        
+        in(n,:) = [x y];
+        n = n+1;
+    end
+    
+end
+
+%% Setting video
+frame_t=30;
+delay = 5;
+
+figure(1)
+plot(in(:,1),in(:,2),'.');
+movieArray(1:frame_t) = getframe;
+
+%% Simulazione
+
+for t = 1:T
+   
+    out = cat_map_integrate(in);   %%%in questa funzione
+                                   %%%chiamo la cat map
+    figure(1)
+    plot(out(:,1),out(:,2),'.');
+    movieArray(frame_t:frame_t+delay) = getframe;
+    
+    in = out;
+    frame_t = frame_t + delay;
+end
+
+%% pulizia zozzerie di matlab
+movieArray
+
+
+%% opzioni e setting video
+myVideo = VideoWriter('minigatto.avi');
+myVideo.FrameRate = 30;  % Default 30
+myVideo.Quality = 50;    % Default 75
+open(myVideo);
+writeVideo(myVideo, movieArray);
+close(myVideo);
+
+%% stop al cronometro
+toc(stopwatch)

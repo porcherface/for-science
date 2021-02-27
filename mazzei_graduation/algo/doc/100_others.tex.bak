@@ -1,0 +1,72 @@
+\section{The algorithm}
+
+In this section a procedure to create the field population is described, the detail of the algorithm will be reported in appendix A.
+This algorithm implements the recursive reweigh at two levels.
+
+We will call $N_h$ the number of fields of the systems, $N_s$ the number of substates in a given state, and $N_c$ the number of states (the states have been called clusters and the substates have been called states in the algorithm reported in the Appendix B).
+Each field ${h_i}^{\alpha,\gamma}$ is initialized as iid random variables with uniform distribution.
+
+Every iteration step we choose $k$ sites in $\{1,...,N_h\}$ that will be used for the merging procedure.
+
+For each site $i_j$, $j=\{1,...,k\}$ we have $N_C$ clusters, each containing $N_s$ states. The merging procedure merges every same-state-same-cluster field taken from sites $i_1,...i_k$.
+We will denote with $\mathcal{M}(\circ)$ the merging procedure.
+
+\begin{equation}
+h_0^{\alpha,\gamma} = \mathcal{M}(h_{i_1}^{\alpha,\gamma},\dots,h_{i_k}^{\alpha,\gamma
+})
+\end{equation}
+
+For each cluster we have obtained a distribution of states, among with the free energy shift that will determine the state probability $(h_0^{\alpha,\gamma},\Delta F^{\alpha\gamma}$. We then reweigh to obtain the correlated distribution of states. The reweighing procedure must be done for each cluster, which means $N_c$ times per single step of population dynamic.
+
+\begin{figure}
+		\includegraphics[scale = 0.7]{img/algoimg2.png}
+	\caption{A step of the algorithm}
+	\label{fig:algoimg}
+\end{figure}
+
+Once all the reweighs have been done at a state level, we can obtain the proper weight of each cluster simply evaluating the mean free energy shift $\langle dF\rangle_\alpha$ for that cluster.
+
+Assigning a proper weight to each cluster allows us to reweigh at a two step RSB level. Similarly to what happens in the one-step RSB case, we may write
+\begin{equation}
+p_{\alpha} = exp(-\beta*x_C*\langle dF\rangle_\alpha)
+\end{equation}
+
+\section{The reweighing detail}
+
+The reweighing procedure generates a population of states distributed resembling each proper weight.
+
+\begin{equation}
+\frac{1}{\sum_\gamma \exp(-\beta x \delta F^{\alpha \gamma}) }\sum_\gamma \exp(-\beta x \delta F^{\alpha \gamma}) \Theta(h-{h_{0}^{\alpha\gamma}}) = \frac{1}{N_s} \Theta(h-h^{\alpha\gamma})
+\end{equation}
+
+The above equations can be implemented in a computer routine using various methods. In the simpler case we only choose the new states into a set containing the old states,
+but with a weight given by their prefactor. In order to extract the new fields with the correct weight, the only operation that must be done is to sum over the weights and find the cumulative function of the distribution, then extract a random number in the unitary interval and check to which state it is associated in the cumulative function of the states.
+This is indeed a risky procedure, since every new field is extracted from a discrete set, the one containing the old fields. If the system size is too small the risk is to produce a sample composed of a single field or two. This would make evaluation of every observable obviously go wrong.
+
+I will like to remark that this procedure is done $N_c$ times for each iteration step, and one time reweighing $N_s$ variables, so a low complexity in this phase is mandatory.
+
+\subsection{A more refined reweighing}
+
+In this subsection I would like to spend a few words on the possibility of improving the reweighing procedure used in the algorithm runs. The algorithm just described is very simple to understand conceptually, but unfortunately it suffers a big bias given by the fact that it reweighs choosing the new elements from the starting set of the old ones. This in the large $N$ limit will not be a problem, but if the number of available starting states is small there is a chance that the algorithm will return a series of trivial results in a finite time, having generated for example the same value for all the states after the reweighing. An improvement of the reweighing procedure, however, will risk to overweigh the computational effort of the routine. An important thing to remark is that when one has to reweigh at the state level it is simple to create such routine, but when reweighing at cluster level the operation that one must do are conceptually different.
+
+Let's start with the state level reweigh. In this case we have a set $\mathcal(S)$ of fields that sample a probability distribution. First of all we may sort the elements of $\mathcal(S)$, then we choose an element of $\mathcal(S)$ with a probability distribution given by each weight, let's call it $h_i$, where $i$ indicizes the element after the sorting procedure. Then we extract the new field in the interval that has as extremals $h_{i+1}$ and $h_i-1$. If the site chosen is an extremal, we may use the bounding support $[-K,K]$.
+
+This procedure has the advantage of reshuffling a bit the numerical values of the data. This would make the algorithm stable even with small samples.
+
+When we try to extend this reweigh to the cluster level, we need to slightly modify it. Since the data that we must reweigh now is not a collection of points, but instead a collection of probability distributions, we first need a definition of distance that will be used as a comparator in the sorting procedure. A common choose \cite{kullback} is to use the Kullback Leibler divergence as a metric (though it is not a well defined metric, since it is not symmetric). We recall that the Kullback Leibler divergence between two distributions $P$ and $Q$ measures how much information is lost when $Q$ is used to approximate $P$ and is defined as
+\begin{equation}
+D(P,Q) = \sum_i \log({P_i \over Q_i})P_i
+\end{equation}
+An ordering procedure could take Q as a the uniform distribution (we are sorting using the entropy of each distribution now) and sort the element with this criterion. The following step is to generate the new distribution. This can be done in an intuitive way similarly to what has been done for the states.
+
+The last passage is the reshuffling of the new fields in each cluster, and then the reshuffle for each cluster. This is mandatory because the ordering procedure introduces a bias, and the reshuffle sets again the correct situation. The reshuffle procedure is very fast (linear in the data size) and typically the Fisher Yates shuffle is used \cite{shuffle}.
+
+
+
+
+
+
+
+
+
+
